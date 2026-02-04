@@ -15,32 +15,46 @@ const Registration = () => {
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
 
-            const tl = gsap.timeline({
+            // Text Reveals
+            const textLines = comp.current.querySelectorAll('.text-reveal-line');
+            gsap.to(textLines, {
                 scrollTrigger: {
-                    trigger: comp.current,
-                    start: "top 75%"
-                }
+                    trigger: '.reg-form-container',
+                    start: "top 80%"
+                },
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                stagger: 0.1,
+                ease: "power4.out"
             });
 
-            tl.from('.reg-form-container', {
-                y: 100,
+            // Form Fields Reveal
+            gsap.from('.input-wrapper', {
+                scrollTrigger: {
+                    trigger: '.reg-form-container',
+                    start: "top 75%"
+                },
+                y: 30,
                 opacity: 0,
-                duration: 1.2,
-                ease: "power4.out"
-            })
-                .from('.input-wrapper', {
-                    y: 30,
-                    opacity: 0,
-                    stagger: 0.1,
-                    duration: 0.8,
-                    ease: "power2.out"
-                }, "-=0.8")
-                .from('.submit-btn', {
-                    y: 20,
-                    opacity: 0,
-                    duration: 0.6,
-                    ease: "back.out(1.7)"
-                }, "-=0.4");
+                stagger: 0.1,
+                duration: 0.8,
+                ease: "power2.out",
+                delay: 0.5 // Wait for text
+            });
+
+            // Button
+            gsap.from('.submit-btn', {
+                scrollTrigger: {
+                    trigger: '.reg-form-container',
+                    start: "top 75%"
+                },
+                y: 20,
+                opacity: 0,
+                duration: 0.6,
+                ease: "back.out(1.7)",
+                delay: 1.0
+            });
 
         }, comp);
 
@@ -90,8 +104,20 @@ const Registration = () => {
             }}>
 
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px' }}>Join the <span style={{ color: 'var(--accent-primary)', textShadow: '0 0 30px var(--accent-glow)' }}>Elite.</span></h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginTop: '10px' }}>Secure your spot in history.</p>
+                    <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px', lineHeight: 1.2 }}>
+                        <span className="text-reveal-mask">
+                            {/* Nested spans to group text if needed, or just one line */}
+                            <span className="text-reveal-line">Join the <span style={{ color: 'var(--accent-primary)', textShadow: '0 0 30px var(--accent-glow)' }}>Elite.</span></span>
+                        </span>
+                    </h2>
+
+                    <div style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginTop: '10px' }}>
+
+                        <span className="text-reveal-mask">
+                            <span className="text-reveal-line">Secure your spot in history.</span>
+                        </span>
+
+                    </div>
                 </div>
 
                 <div className="success-message" style={{ display: 'none', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '400px', opacity: 0, transform: 'scale(0.9)' }}>

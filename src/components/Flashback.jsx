@@ -1,30 +1,56 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const Flashback = () => {
+    const sectionRef = useRef(null);
     const stripRef = useRef(null);
     const row1Ref = useRef(null);
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
 
+            // Header Reveal
+            const headerLine = sectionRef.current.querySelector('.header-reveal .text-reveal-line');
+            if (headerLine) {
+                gsap.to(headerLine, {
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top 75%",
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: "power4.out"
+                });
+            }
+
             // Continuous Marquee Animation
-            // Duplicate content is not needed if the strip is long enough or we reset 
-            // For a seamless infinite loop, normally we need double content. 
-            // I'll assume for now a simple slow drift is what they want, 
-            // or I can do a yoyo/repeat.
-
-            // Let's do a slow infinite scroll to the left
             const width = row1Ref.current.scrollWidth;
-
             gsap.to(row1Ref.current, {
-                xPercent: -50, // Move half way (assuming we doubled content)
+                xPercent: -50,
                 ease: "none",
-                duration: 40, // Slow
+                duration: 40,
                 repeat: -1
             });
 
-        }, stripRef);
+            // Reveal items inside the marquee as the section comes into view
+            // (Subtle staggered reveal even though they are scrolling)
+            const cards = row1Ref.current.querySelectorAll('.flash-item');
+            gsap.from(cards, {
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 80%"
+                },
+                y: 100,
+                opacity: 0,
+                rotateX: -20,
+                stagger: 0.1,
+                duration: 1.2,
+                ease: "power3.out"
+            });
+
+        }, sectionRef);
 
         return () => ctx.revert();
     }, []);
@@ -37,23 +63,23 @@ const Flashback = () => {
         { year: "Legacy", title: "Forever", color: "#777" }
     ];
 
-    // Double the array for seamless marquee
     const marqueeItems = [...memories, ...memories];
 
     return (
-        <section id="flashback" style={{
-            minHeight: '60vh', // Slightly more compact
+        <section id="flashback" ref={sectionRef} style={{
+            minHeight: '60vh',
             position: 'relative',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             padding: '100px 0',
-            // background: 'var(--bg-color)' 
         }}>
 
             <div style={{ paddingLeft: '5vw', marginBottom: '2rem' }}>
-                <h2 className="glow-text" style={{ fontSize: '3rem', color: 'var(--text-main)' }}>Archive</h2>
+                <h2 className="glow-text header-reveal text-reveal-mask" style={{ fontSize: '3rem', color: 'var(--text-main)' }}>
+                    <span className="text-reveal-line">Archive</span>
+                </h2>
             </div>
 
             {/* Moving Strip Wrapper */}
@@ -79,6 +105,7 @@ const Flashback = () => {
                             border: '1px solid var(--glass-border)',
                             background: 'var(--glass-bg)'
                         }}>
+                            {/* No complex text masking inside moving elements to avoid perf issues, just standard fade/opacity on container is enough for "Entrance" */}
                             <h3 style={{ fontSize: '4rem', fontWeight: 900, color: 'rgba(255,255,255,0.05)', position: 'absolute' }}>{mem.year}</h3>
                             <p style={{ zIndex: 1, fontSize: '1.2rem', color: 'var(--text-main)', fontWeight: 600 }}>{mem.title}</p>
                         </div>

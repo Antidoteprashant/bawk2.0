@@ -8,27 +8,54 @@ const EventDetails = () => {
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
 
-            gsap.from('.detail-header', {
+            // Header Reveal
+            const headerLines = container.current.querySelectorAll('.detail-header .text-reveal-line');
+            gsap.to(headerLines, {
                 scrollTrigger: {
-                    trigger: container.current,
+                    trigger: '.detail-header',
                     start: "top 80%",
                 },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                ease: "power3.out"
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                stagger: 0.1,
+                ease: "power4.out"
             });
 
-            gsap.from('.detail-card', {
-                scrollTrigger: {
-                    trigger: '.cards-container',
-                    start: "top 85%",
-                },
-                y: 100,
-                opacity: 0,
-                stagger: 0.2,
-                duration: 1,
-                ease: "power3.out"
+            // Cards Reveal
+            const cards = container.current.querySelectorAll('.detail-card');
+            gsap.fromTo(cards,
+                { y: 50, opacity: 0 },
+                {
+                    scrollTrigger: {
+                        trigger: '.cards-container',
+                        start: "top 85%",
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: "power3.out"
+                }
+            );
+
+            // Text inside cards (delayed slightly after card appears)
+            cards.forEach((card, i) => {
+                const lines = card.querySelectorAll('.text-reveal-line');
+                if (lines.length > 0) {
+                    gsap.to(lines, {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 90%",
+                        },
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        delay: 0.2 + (i * 0.1), // Stagger based on card index too
+                        stagger: 0.05,
+                        ease: "power3.out"
+                    });
+                }
             });
 
         }, container);
@@ -57,13 +84,25 @@ const EventDetails = () => {
             padding: '100px 20px',
             flexDirection: 'column',
             position: 'relative',
-            background: 'linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.02) 50%, transparent)'
         }}>
             <div className="detail-header" style={{ textAlign: 'center', marginBottom: '80px', maxWidth: '800px' }}>
-                <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '20px', color: 'var(--text-main)' }}>What is <span className="text-gradient">Quick Snatch?</span></h2>
-                <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                    It's not just a contest; it's a reflex revolution. We challenge your cognitive speed and motor skills in a series of custom-built digital challenges.
-                </p>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '20px', color: 'var(--text-main)', lineHeight: 1.2 }}>
+                    <span className="text-reveal-mask">
+                        <span className="text-reveal-line">What is <span className="text-gradient">Quick Snatch?</span></span>
+                    </span>
+                </h2>
+
+                <div style={{ fontSize: '1.2rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                    <span className="text-reveal-mask">
+                        <span className="text-reveal-line">It's not just a contest; it's a reflex revolution.</span>
+                    </span>
+                    <span className="text-reveal-mask">
+                        <span className="text-reveal-line">We challenge your cognitive speed and motor skills</span>
+                    </span>
+                    <span className="text-reveal-mask">
+                        <span className="text-reveal-line">in a series of custom-built digital challenges.</span>
+                    </span>
+                </div>
             </div>
 
             <div className="cards-container" style={{
@@ -79,8 +118,16 @@ const EventDetails = () => {
                         textAlign: 'left',
                         transition: 'transform 0.3s ease, border-color 0.3s ease'
                     }}>
-                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--accent-primary)' }}>0{i + 1}. {item.title}</h3>
-                        <p style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>{item.desc}</p>
+                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--accent-primary)', overflow: 'hidden' }}>
+                            <span className="text-reveal-mask">
+                                <span className="text-reveal-line">0{i + 1}. {item.title}</span>
+                            </span>
+                        </h3>
+                        <div style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                            <span className="text-reveal-mask">
+                                <span className="text-reveal-line">{item.desc}</span>
+                            </span>
+                        </div>
                     </div>
                 ))}
             </div>
