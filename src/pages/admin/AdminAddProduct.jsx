@@ -12,7 +12,7 @@ const AdminAddProduct = () => {
         price: '',
         originalPrice: '',
         stock: '',
-        categoryId: categories[0].id, // Default to first category
+        categoryId: categories[0].id, // Default to first category ID
         description: '',
         status: 'active',
         image: null,
@@ -64,15 +64,14 @@ const AdminAddProduct = () => {
             return;
         }
 
-        // Find Category Name
-        const selectedCategory = categories.find(c => c.id === parseInt(formData.categoryId)) || categories[0];
+
 
         const newProduct = {
             name: formData.name,
             price: parseFloat(formData.price),
             description: formData.description,
             stock: parseInt(formData.stock),
-            category: selectedCategory.name, // Map to name
+            category: formData.categoryId, // Save ID directly
             image_url: formData.imagePreview, // Map to image_url (using base64 for now)
             // status: formData.status // Schema might not have status, ignoring for now or adding if schema allows, but schema didn't include it. 
             // The schema created was: name, description, price, category, image_url, stock.

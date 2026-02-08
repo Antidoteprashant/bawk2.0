@@ -2,6 +2,7 @@ import React from 'react';
 import { useAdmin } from '../../context/AdminContext';
 
 import { useNavigate } from 'react-router-dom';
+import { categories } from '../../data/products';
 
 const AdminProducts = () => {
     const { products, deleteProduct } = useAdmin();
@@ -41,7 +42,9 @@ const AdminProducts = () => {
                         {products.map(product => (
                             <tr key={product.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                                 <td style={{ padding: '15px', color: '#fff', fontWeight: 'bold' }}>{product.name}</td>
-                                <td style={{ padding: '15px', color: 'var(--text-muted)' }}>{product.category}</td>
+                                <td style={{ padding: '15px', color: 'var(--text-muted)' }}>
+                                    {categories.find(c => c.id === product.category)?.name || product.category}
+                                </td>
                                 <td style={{ padding: '15px', color: '#fff' }}>${product.price}</td>
                                 <td style={{ padding: '15px' }}>
                                     <span style={{ color: product.stock < 10 ? 'red' : '#fff' }}>

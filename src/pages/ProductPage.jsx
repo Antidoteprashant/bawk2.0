@@ -1,17 +1,24 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { gsap } from 'gsap';
-import { products } from '../data/products';
+import { products as staticProducts, categories } from '../data/products'; // Keep static as fallback or lookup
+import { useAdmin } from '../context/AdminContext';
 import { useCart } from '../context/CartContext';
 
 const ProductPage = () => {
     const { id } = useParams();
     const container = useRef(null);
     const { addToCart } = useCart();
+    const { products: dbProducts } = useAdmin();
     const [quantity, setQuantity] = useState(1);
 
-    // Find product (convert id to number since params are strings)
-    const product = products.find(p => p.id === parseInt(id));
+    // Merge DB and Static if needed, or just use DB + fallback to static
+    // Actually, AdminContext likely has all products if seeded.
+    // Let's combine them:
+    const allProducts = [...(dbProducts || []), ...staticProducts];
+
+    // Find product (handle both string/number IDs)
+    const product = allProducts.find(p => String(p.id) === String(id));
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
@@ -57,19 +64,19 @@ const ProductPage = () => {
                 {/* Image Side */}
                 <div className="anim-up" style={{
                     aspectRatio: '1',
-                    background: `url(${product.image}) center/cover`,
+                    background: `url(${product.image_url || product.image}) center/cover`,
                     borderRadius: '20px'
                 }} />
 
                 {/* Info Side */}
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <Link to={`/categories/${product.categoryId}`} className="anim-up" style={{
+                    <Link to={`/categories/${product.category || product.categoryId}`} className="anim-up" style={{
                         color: 'var(--text-muted)',
                         textTransform: 'uppercase',
                         marginBottom: '20px',
                         display: 'block'
                     }}>
-                        &larr; Back to {product.categoryId}
+                        &larr; Back to {categories.find(c => c.id === (product.category || product.categoryId))?.name || (product.category || product.categoryId)}
                     </Link>
 
                     <h1 className="anim-up" style={{ fontSize: '3rem', marginBottom: '10px', lineHeight: 1 }}>{product.name}</h1>

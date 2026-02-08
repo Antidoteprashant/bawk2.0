@@ -21,7 +21,7 @@ const CategoryPage = () => {
 
     // Get category info and filtred products
     const category = categories.find(c => c.id === id);
-    const categoryProducts = products.filter(p => p.categoryId === id);
+    const categoryProducts = products.filter(p => p.category === id);
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
@@ -74,7 +74,7 @@ const CategoryPage = () => {
                                 <div style={{
                                     width: '100%',
                                     aspectRatio: '1',
-                                    background: `url(${product.image}) center/cover`,
+                                    background: `url(${product.image_url || product.image}) center/cover`,
                                     borderRadius: '10px'
                                 }} />
                             </Link>
