@@ -178,9 +178,7 @@ const Navbar = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                     {user ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ color: 'var(--accent-primary)', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                {user.email?.split('@')[0]}
-                            </span>
+
                             <button
                                 onClick={async () => {
                                     await supabase.auth.signOut();
