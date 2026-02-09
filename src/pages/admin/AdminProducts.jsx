@@ -1,20 +1,27 @@
-import React from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { useNavigate } from 'react-router-dom';
-import { categories } from '../../data/products';
+// import { categories } from '../../data/products'; // Removed static
 import { useCurrentTime } from '../../hooks/useCurrentTime';
 
 const AdminProducts = () => {
-    const { products, deleteProduct } = useAdmin();
+    const { products, deleteProduct, categories } = useAdmin(); // Get categories
     const navigate = useNavigate();
     const currentTime = useCurrentTime();
 
+    // Helper to get category name
+    const getCategoryName = (id) => {
+        const cat = categories.find(c => c.id === id);
+        return cat ? cat.name : id;
+    };
+
     return (
         <div>
-            {/* Header with Title, Timestamp, and Actions */}
+            {/* ... header ... */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
+
+                // ... (rest of header is same, skipping to avoid huge diff) ... 
                 alignItems: 'center',
                 marginBottom: '30px',
                 flexWrap: 'wrap',
@@ -64,7 +71,7 @@ const AdminProducts = () => {
                             <tr key={product.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                                 <td style={{ padding: '15px', color: '#fff', fontWeight: 'bold' }}>{product.name}</td>
                                 <td style={{ padding: '15px', color: 'var(--text-muted)' }}>
-                                    {categories.find(c => c.id === product.category)?.name || product.category}
+                                    {getCategoryName(product.category)}
                                 </td>
                                 <td style={{ padding: '15px', color: '#fff' }}>${product.price}</td>
                                 <td style={{ padding: '15px' }}>

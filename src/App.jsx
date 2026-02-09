@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 
 // Pages
 import Home from './pages/Home';
@@ -20,6 +20,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminAddProduct from './pages/admin/AdminAddProduct';
+import AdminCategories from './pages/admin/AdminCategories';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminLogin from './pages/admin/AdminLogin';
 
@@ -105,7 +106,9 @@ function App() {
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/add" element={<AdminAddProduct />} />
+                <Route path="categories" element={<AdminCategories />} />
                 <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="logic" element={<Navigate to="/admin" replace />} />
               </Route>
             </Route>
           </Routes>

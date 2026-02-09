@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
-import { categories } from '../../data/products';
 
 const AdminAddProduct = () => {
     const navigate = useNavigate();
-    const { addProduct } = useAdmin();
+    const { addProduct, categories } = useAdmin();
 
     const [formData, setFormData] = useState({
         name: '',
         price: '',
         originalPrice: '',
         stock: '',
-        categoryId: categories[0].id, // Default to first category ID
+        categoryId: '',
         description: '',
         status: 'active',
         image: null,
         imagePreview: null
     });
 
+    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
+
+    // Set default category
+    React.useEffect(() => {
+        if (categories.length > 0 && !formData.categoryId) {
+            setFormData(prev => ({ ...prev, categoryId: categories[0].id }));
+        }
+    }, [categories]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -53,10 +60,11 @@ const AdminAddProduct = () => {
         if (!formData.price) newErrors.price = 'Price is required';
         if (!formData.stock) newErrors.stock = 'Stock is required';
         if (!formData.imagePreview && !formData.image) newErrors.image = 'Product Image is required';
+        if (!formData.categoryId) newErrors.categoryId = 'Category is required';
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
@@ -64,20 +72,19 @@ const AdminAddProduct = () => {
             return;
         }
 
-
-
         const newProduct = {
             name: formData.name,
             price: parseFloat(formData.price),
             description: formData.description,
             stock: parseInt(formData.stock),
-            category: formData.categoryId, // Save ID directly
-            image_url: formData.imagePreview, // Map to image_url (using base64 for now)
-            // status: formData.status // Schema might not have status, ignoring for now or adding if schema allows, but schema didn't include it. 
-            // The schema created was: name, description, price, category, image_url, stock.
+            category: formData.categoryId,
+            image_url: formData.imagePreview,
         };
 
-        addProduct(newProduct);
+        // TODO: Handle actual image upload to storage if needed, currently using base64/preview
+        // For now, passing the preview as image_url as per previous logic
+
+        await addProduct(newProduct);
         navigate('/admin/products');
     };
 
@@ -167,17 +174,19 @@ const AdminAddProduct = () => {
                         {errors.stock && <div style={errorStyle}>{errors.stock}</div>}
                     </div>
                     <div>
-                        <label style={labelStyle}>Category</label>
+                        <label style={labelStyle}>Category *</label>
                         <select
                             name="categoryId"
                             value={formData.categoryId}
                             onChange={handleChange}
                             style={inputStyle}
                         >
+                            <option value="">Select Category</option>
                             {categories.map(cat => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
                         </select>
+                        {errors.categoryId && <div style={errorStyle}>{errors.categoryId}</div>}
                     </div>
                 </div>
 
@@ -272,7 +281,7 @@ const AdminAddProduct = () => {
                         Cancel
                     </button>
                     <button
-                        type="submit"
+                        disabled={loading}
                         style={{
                             padding: '12px 25px',
                             background: 'var(--accent-primary)',
@@ -280,10 +289,11 @@ const AdminAddProduct = () => {
                             border: 'none',
                             borderRadius: '5px',
                             fontWeight: 'bold',
-                            cursor: 'pointer'
+                            cursor: loading ? 'not-allowed' : 'pointer',
+                            opacity: loading ? 0.7 : 1
                         }}
                     >
-                        Save Product
+                        {loading ? 'Saving...' : 'Save Product'}
                     </button>
                 </div>
 
