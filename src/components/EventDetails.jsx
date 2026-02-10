@@ -65,16 +65,16 @@ const EventDetails = () => {
 
     const details = [
         {
-            title: "The Arena",
-            desc: "An intense digital battlefield where speed meets strategy. Prove you have the quickest hands in the west."
+            title: "Wide Selection",
+            desc: "Explore a diverse range of products, including action figures, posters, clothing, accessories, and more from popular and classic anime series"
         },
         {
-            title: "Who Can Join?",
-            desc: "Open to all college students. Solo participation. No prerequisites—just raw reaction time and wit."
+            title: "For Every Fan",
+            desc: "Whether youre a hardcore collector or looking for a gift for an anime lover, we have something for everyone"
         },
         {
-            title: "The Format",
-            desc: "3 Rounds: Qualifiers, Semi-Finals (Knockout), and the Grand Finale. Only the top 10 survive."
+            title: "Exceptional Service",
+            desc: "We pride ourselves on fast shipping, secure payments, and friendly customer support to make your shopping experience seamless"
         }
     ];
 
