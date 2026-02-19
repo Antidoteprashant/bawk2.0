@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
 
@@ -99,7 +100,7 @@ const Footer = () => {
                     <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         {['All Products', 'New Arrivals', 'Best Sellers', 'Accessories'].map((item) => (
                             <li key={item}>
-                                <a href="#" style={{
+                                <Link to="/categories" style={{
                                     color: 'var(--text-muted)',
                                     textDecoration: 'none',
                                     fontSize: '0.95rem',
@@ -115,7 +116,7 @@ const Footer = () => {
                                         e.target.style.transform = 'translateX(0)';
                                     }}>
                                     {item}
-                                </a>
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -135,7 +136,7 @@ const Footer = () => {
                     <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         {['Help Center', 'Shipping & Returns', 'Privacy Policy', 'Terms of Service'].map((item) => (
                             <li key={item}>
-                                <a href="#" style={{
+                                <Link to="#" style={{
                                     color: 'var(--text-muted)',
                                     textDecoration: 'none',
                                     fontSize: '0.95rem',
@@ -151,7 +152,7 @@ const Footer = () => {
                                         e.target.style.transform = 'translateX(0)';
                                     }}>
                                     {item}
-                                </a>
+                                </Link>
                             </li>
                         ))}
                     </ul>
