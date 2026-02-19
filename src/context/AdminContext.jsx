@@ -9,6 +9,7 @@ export const AdminProvider = ({ children }) => {
     const [orders, setOrders] = useState([]);
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [users, setUsers] = useState([]); // Users state
     const [loading, setLoading] = useState(true);
 
     // Fetch Data
@@ -42,6 +43,15 @@ export const AdminProvider = ({ children }) => {
 
             if (categoryError) throw categoryError;
             setCategories(categoryData || []);
+
+            // Fetch Users
+            const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (userError) throw userError;
+            setUsers(userData || []);
 
         } catch (error) {
             console.error("Error fetching data:", error.message);
@@ -230,8 +240,9 @@ export const AdminProvider = ({ children }) => {
         const totalRevenue = orders.reduce((acc, order) => acc + (parseFloat(order.total_amount) || 0), 0);
         const pendingOrders = orders.filter(o => o.status === 'Pending').length;
         const totalProducts = products.length;
+        const totalUsers = users.length;
 
-        return { totalOrders, totalRevenue, pendingOrders, totalProducts };
+        return { totalOrders, totalRevenue, pendingOrders, totalProducts, totalUsers };
     };
 
     return (
@@ -247,7 +258,8 @@ export const AdminProvider = ({ children }) => {
             addCategory,
             deleteCategory,
             getStats,
-            refreshData: fetchData
+            refreshData: fetchData,
+            users // Export users
         }}>
             {children}
         </AdminContext.Provider>

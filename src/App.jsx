@@ -23,6 +23,8 @@ import AdminAddProduct from './pages/admin/AdminAddProduct';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminLogin from './pages/admin/AdminLogin';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminUserDetails from './pages/admin/AdminUserDetails';
 
 // Context
 import { CartProvider } from './context/CartContext';
@@ -104,6 +106,8 @@ function App() {
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="orders" element={<AdminOrders />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="users/:id" element={<AdminUserDetails />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/add" element={<AdminAddProduct />} />
                 <Route path="categories" element={<AdminCategories />} />

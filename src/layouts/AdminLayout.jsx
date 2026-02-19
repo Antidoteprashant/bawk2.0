@@ -56,6 +56,7 @@ const AdminLayout = () => {
                 <nav style={{ flex: 1 }}>
                     <NavLink to="/admin" end style={linkStyle}>Dashboard</NavLink>
                     <NavLink to="/admin/orders" style={linkStyle}>Orders</NavLink>
+                    <NavLink to="/admin/users" style={linkStyle}>Users</NavLink>
                     <NavLink to="/admin/products" style={linkStyle}>Products</NavLink>
                     <NavLink to="/admin/categories" style={linkStyle}>Categories</NavLink>
                     <NavLink to="/admin/analytics" style={linkStyle}>Analytics</NavLink>
